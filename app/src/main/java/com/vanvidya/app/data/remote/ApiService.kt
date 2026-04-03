@@ -6,13 +6,13 @@ import retrofit2.http.*
 
 interface ApiService {
 
-    @GET("api/external/complete/")
+    @GET("external/complete/")
     suspend fun getCompletePlantInfo(
         @Query("name") plantName: String
     ): Response<CompletePlantInfo>
 
     @Multipart
-    @POST("api/identify-leaf/")
+    @POST("identify-leaf/")
     suspend fun identifyLeaf(
         @Part image: MultipartBody.Part
     ): Response<LeafIdentificationResponse>

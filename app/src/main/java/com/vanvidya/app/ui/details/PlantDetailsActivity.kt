@@ -75,15 +75,6 @@ class PlantDetailsActivity : AppCompatActivity() {
 
         backButton.setOnClickListener { finish() }
     }
-
-    // =========================================================
-    // ✅ NEW: Display from full JSON (from your backend API)
-    // This matches your JSON format exactly:
-    // common_name, hindi_name, description, image_url,
-    // scientific_name, family, watering, sunlight, soil_type,
-    // indoor_outdoor, edible, toxic, warning, fun_facts,
-    // origin, growth_rate, diseases[]
-    // =========================================================
     private fun displayFromJson(plant: JSONObject) {
 
         // Image
