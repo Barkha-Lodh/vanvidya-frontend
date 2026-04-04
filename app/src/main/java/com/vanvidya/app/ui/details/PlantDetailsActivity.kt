@@ -5,13 +5,22 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
 import com.vanvidya.app.R
+import com.vanvidya.app.data.local.AppDatabase
+import com.vanvidya.app.data.local.PlantEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 class PlantDetailsActivity : AppCompatActivity() {
 
+    private lateinit var addToCollectionBtn: MaterialButton
     private lateinit var backButton: ImageView
     private lateinit var plantImage: ImageView
     private lateinit var plantNameText: TextView
@@ -40,12 +49,10 @@ class PlantDetailsActivity : AppCompatActivity() {
 
         initializeViews()
 
-        //
         val plantJson = intent.getStringExtra("plant_json")
         if (plantJson != null) {
             displayFromJson(JSONObject(plantJson))
         } else {
-            //
             displayFromExtras()
         }
     }
@@ -72,10 +79,80 @@ class PlantDetailsActivity : AppCompatActivity() {
         funFactsText = findViewById(R.id.fun_facts_text)
         diseasesCard = findViewById(R.id.diseases_card)
         diseasesContainer = findViewById(R.id.diseases_container)
+        addToCollectionBtn = findViewById(R.id.add_to_collection_btn)
 
         backButton.setOnClickListener { finish() }
     }
+
     private fun displayFromJson(plant: JSONObject) {
+        val plantName = plant.optString("common_name", "Unknown")
+        val category = intent.getStringExtra("category")
+            ?: plant.optString("type").ifEmpty { "plant" }
+        val db = AppDatabase.getDatabase(this)
+
+        // 1. Keep track of the state locally
+        var isSaved = false
+
+        // 2. Check the initial state on load
+        lifecycleScope.launch {
+            val existing = withContext(Dispatchers.IO) {
+                db.plantDao().getPlantByNameAndCategory(plantName, category)
+            }
+            if (existing != null) {
+                isSaved = true
+                addToCollectionBtn.text = "➖ Remove from Collection"
+                addToCollectionBtn.setBackgroundColor(android.graphics.Color.parseColor("#D32F2F")) // Red
+            } else {
+                isSaved = false
+                addToCollectionBtn.text = "➕ Add to Collection"
+                addToCollectionBtn.setBackgroundColor(android.graphics.Color.parseColor("#4CAF50")) // Green
+            }
+        }
+
+        // 3. Handle toggling on click
+        addToCollectionBtn.setOnClickListener {
+            lifecycleScope.launch {
+                if (isSaved) {
+                    // REMOVE FROM COLLECTION
+                    withContext(Dispatchers.IO) {
+                        db.plantDao().deleteByNameAndCategory(plantName, category)
+                    }
+                    isSaved = false
+                    addToCollectionBtn.text = "➕ Add to Collection"
+                    addToCollectionBtn.setBackgroundColor(android.graphics.Color.parseColor("#4CAF50")) // Green
+                    Toast.makeText(this@PlantDetailsActivity, "Removed from collection!", Toast.LENGTH_SHORT).show()
+                } else {
+                    // ADD TO COLLECTION
+                    val entity = PlantEntity(
+                        commonName = plantName,
+                        hindiName = plant.optString("hindi_name", ""),
+                        scientificName = plant.optString("scientific_name", ""),
+                        family = plant.optString("family", ""),
+                        description = plant.optString("description", ""),
+                        imageUrl = plant.optString("image_url", "").ifEmpty { null },
+                        watering = plant.optString("watering", ""),
+                        sunlight = plant.optString("sunlight", ""),
+                        soilType = plant.optString("soil_type", ""),
+                        indoorOutdoor = plant.optString("indoor_outdoor", ""),
+                        edible = plant.optString("edible", ""),
+                        toxic = plant.optString("toxic", ""),
+                        warning = plant.optString("warning", ""),
+                        funFacts = plant.optString("fun_facts", ""),
+                        origin = plant.optString("origin", ""),
+                        growthRate = plant.optString("growth_rate", ""),
+                        diseasesJson = plant.optJSONArray("diseases")?.toString() ?: "[]",
+                        category = category
+                    )
+
+                    withContext(Dispatchers.IO) { db.plantDao().insertPlant(entity) }
+
+                    isSaved = true
+                    addToCollectionBtn.text = "➖ Remove from Collection"
+                    addToCollectionBtn.setBackgroundColor(android.graphics.Color.parseColor("#D32F2F")) // Red
+                    Toast.makeText(this@PlantDetailsActivity, "Added to collection!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
         // Image
         val imageUrl = plant.optString("image_url", "")
@@ -87,7 +164,7 @@ class PlantDetailsActivity : AppCompatActivity() {
         }
 
         // Names
-        plantNameText.text = plant.optString("common_name", "Unknown")
+        plantNameText.text = plantName
 
         val hindiName = plant.optString("hindi_name", "")
         if (hindiName.isNotEmpty()) {
@@ -115,7 +192,7 @@ class PlantDetailsActivity : AppCompatActivity() {
         lightText.text = plant.optString("sunlight", "—")
         soilText.text = plant.optString("soil_type", "—")
 
-        // Temperature kept for backward compatibility
+        // Temperature
         val temp = plant.optString("temperature_range", "")
         temperatureText.text = if (temp.isNotEmpty()) temp else "—"
 
@@ -145,7 +222,6 @@ class PlantDetailsActivity : AppCompatActivity() {
                 val symptom = disease.optString("symptom", "—")
                 val treatment = disease.optString("treatment", "—")
 
-                // Each disease is a small block inside the diseases card
                 val block = LinearLayout(this).apply {
                     orientation = LinearLayout.VERTICAL
                     setPadding(0, 0, 0, 16)
@@ -170,7 +246,6 @@ class PlantDetailsActivity : AppCompatActivity() {
                     setPadding(0, 4, 0, 0)
                 })
 
-                // Divider between diseases
                 if (i < diseases.length() - 1) {
                     block.addView(View(this).apply {
                         layoutParams = LinearLayout.LayoutParams(
@@ -185,8 +260,6 @@ class PlantDetailsActivity : AppCompatActivity() {
         }
     }
 
-    // =========================================================
-    // =========================================================
     private fun displayFromExtras() {
         plantNameText.text = intent.getStringExtra("common_name") ?: "Unknown"
         scientificNameText.text = intent.getStringExtra("scientific_name") ?: "—"

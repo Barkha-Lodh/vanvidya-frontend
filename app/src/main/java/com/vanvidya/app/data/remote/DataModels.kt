@@ -2,9 +2,6 @@ package com.vanvidya.app.data.remote
 
 import com.google.gson.annotations.SerializedName
 
-// ════════════════════════════════════════════════════════════════
-// MAIN PLANT INFO (Used by Home Search & Leaf Scan)
-// ════════════════════════════════════════════════════════════════
 
 data class CompletePlantInfo(
     @SerializedName("common_name") val commonName: String,
@@ -32,10 +29,6 @@ data class Disease(
     @SerializedName("symptom") val symptom: String,
     @SerializedName("treatment") val treatment: String
 )
-
-// ════════════════════════════════════════════════════════════════
-// LEAF IDENTIFICATION RESPONSE (Used by Scan Feature)
-// ════════════════════════════════════════════════════════════════
 
 data class LeafIdentificationResponse(
     @SerializedName("plant_identification") val plantIdentification: PlantIdentificationInfo,

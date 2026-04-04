@@ -86,10 +86,10 @@ class PlantListActivity : AppCompatActivity() {
 
     private fun setupPlantCards() {
         val cards = listOf(plant1Card, plant2Card, plant3Card, plant4Card, plant5Card, plant6Card, plant7Card, plant8Card)
-        // ✅ Changed the last 4 variables to use 'Name' instead of 'Card'
+
         val names = listOf(plant1Name, plant2Name, plant3Name, plant4Name, plant5Name, plant6Name, plant7Name, plant8Name)
 
-        // Show/hide cards based on how many plants we have
+
         cards.forEachIndexed { index, card ->
             if (index < plantNames.size) {
                 card.visibility = android.view.View.VISIBLE
@@ -146,6 +146,7 @@ class PlantListActivity : AppCompatActivity() {
                     startActivity(
                         Intent(this@PlantListActivity, PlantDetailsActivity::class.java).apply {
                             putExtra("plant_json", plantJson.toString())
+                            putExtra("category", "plant")
                         }
                     )
 

@@ -13,13 +13,11 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Header with Greeting and Settings Icon -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp">
 
-            <!-- Dynamic Greeting with Sun Icon -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,7 +42,6 @@
                     android:textSize="32sp" />
             </LinearLayout>
 
-            <!-- Settings Icon -->
             <ImageView
                 android:id="@+id/settings_icon"
                 android:layout_width="40dp"
@@ -56,7 +53,6 @@
                 android:contentDescription="Settings" />
         </RelativeLayout>
 
-        <!-- Search Bar (Opens Plant Search Screen) -->
         <androidx.cardview.widget.CardView
             android:id="@+id/search_card"
             android:layout_width="match_parent"
@@ -91,14 +87,12 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Scanner Cards Grid (Top Row) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:orientation="horizontal">
 
-            <!-- Plant Scanner Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/plant_scanner_card"
                 android:layout_width="0dp"
@@ -107,19 +101,19 @@
                 android:layout_marginEnd="8dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="#6fe374">
+                app:cardBackgroundColor="#387a3b">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
                         android:layout_alignParentTop="true"
-                        android:text="📷"
-                        android:textSize="48sp" />
+                        android:src="@drawable/plant_scanner"
+                        android:contentDescription="Plant Scanner" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -142,7 +136,6 @@
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Mushroom Identify Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/mushroom_card"
                 android:layout_width="0dp"
@@ -158,12 +151,12 @@
                     android:layout_height="match_parent"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
                         android:layout_alignParentTop="true"
-                        android:text="🍄"
-                        android:textSize="48sp" />
+                        android:src="@drawable/mushroom_scanner"
+                        android:contentDescription="Mushroom Scanner" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -187,7 +180,6 @@
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <!-- Flower Scanner Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/flower_scanner_card"
             android:layout_width="match_parent"
@@ -202,12 +194,12 @@
                 android:layout_height="match_parent"
                 android:padding="20dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_alignParentTop="true"
-                    android:text="🌺"
-                    android:textSize="48sp" />
+                    android:src="@drawable/flower_scanner"
+                    android:contentDescription="Flower Scanner" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -230,7 +222,6 @@
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Plant Tools Section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -240,7 +231,6 @@
             android:textColor="@color/text_primary"
             android:layout_marginBottom="16dp" />
 
-        <!-- Plant Tools Cards (Horizontal Scroll) -->
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -252,7 +242,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <!-- Light Meter Card -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/light_meter_card"
                     android:layout_width="200dp"
@@ -301,7 +290,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Water Calculator Card -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/water_calculator_card"
                     android:layout_width="200dp"
@@ -350,7 +338,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Fertilizer Guide Card -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/fertilizer_card"
                     android:layout_width="200dp"
@@ -401,7 +388,6 @@
             </LinearLayout>
         </HorizontalScrollView>
 
-        <!-- Popular Plants Section -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -427,7 +413,6 @@
                 android:textStyle="bold" />
         </RelativeLayout>
 
-        <!-- Popular Plants Horizontal Scroll -->
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -438,7 +423,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <!-- Popular Plant 1 -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/popular_plant_1"
                     android:layout_width="160dp"
@@ -463,7 +447,6 @@
                         android:textSize="64sp" />
                 </androidx.cardview.widget.CardView>
 
-                <!-- Popular Plant 2 -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/popular_plant_2"
                     android:layout_width="160dp"
@@ -488,7 +471,6 @@
                         android:textSize="64sp" />
                 </androidx.cardview.widget.CardView>
 
-                <!-- Popular Plant 3 -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/popular_plant_3"
                     android:layout_width="160dp"

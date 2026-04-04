@@ -1,19 +1,27 @@
 package com.vanvidya.app.ui.collection
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.vanvidya.app.R
+import com.vanvidya.app.data.local.AppDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.jvm.java
 
 class CollectionFragment : Fragment() {
 
     private lateinit var plantCollectionCard: CardView
     private lateinit var mushroomCollectionCard: CardView
     private lateinit var flowerCollectionCard: CardView
+    private val db by lazy { AppDatabase.getDatabase(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,35 +35,31 @@ class CollectionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         plantCollectionCard = view.findViewById(R.id.plant_collection_card)
-        mushroomCollectionCard = view.findViewById(R.id.mushroom_collection_card)
-        flowerCollectionCard = view.findViewById(R.id.flower_collection_card)
 
-        setupClickListeners()
+        plantCollectionCard.setOnClickListener { openCollection("plant") }
+
+        updateCounts()
     }
 
-    private fun setupClickListeners() {
-        plantCollectionCard.setOnClickListener {
-            Toast.makeText(
-                context,
-                "Plant Collection - Coming Soon!\nSave your favorite plants here",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+    private fun updateCounts() {
+        lifecycleScope.launch {
+            val plantCount = withContext(Dispatchers.IO) {
+                db.plantDao().getCountByCategory("plant")
+            }
 
-        mushroomCollectionCard.setOnClickListener {
-            Toast.makeText(
-                context,
-                "Mushroom Collection - Coming Soon!\nSave identified mushrooms here",
-                Toast.LENGTH_SHORT
-            ).show()
+            view?.findViewById<TextView>(R.id.plant_count)?.text =
+                "$plantCount collected"
         }
+    }
 
-        flowerCollectionCard.setOnClickListener {
-            Toast.makeText(
-                context,
-                "Flower Collection - Coming Soon!\nSave beautiful flowers here",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+    private fun openCollection(type: String) {
+        startActivity(Intent(requireContext(), CollectionListActivity::class.java).apply {
+            putExtra("type", type)
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateCounts()
     }
 }
