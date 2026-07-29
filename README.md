@@ -26,5 +26,3 @@ and helps users care for them safely.
 3. App calls the backend API to fetch disease/toxicity info and care recommendations
 4. Displays AI-generated facts (from Gemini/Groq, fetched via backend)
 5. Saves results locally to the user's personal logbook
-
-## Screenshots
