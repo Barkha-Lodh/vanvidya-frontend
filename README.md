@@ -1,6 +1,6 @@
 # 🌿 VanVidya – Frontend (Android App)
 
-An AI-powered Android app that identifies plants, flowers, and mushrooms from camera images, 
+An AI-powered Android app that identifies 🌿 plants, 🌸 flowers, and 🍄 mushrooms from camera images, 
 and helps users care for them safely.
 
 🔗 Backend repo: [VanVidya-Backend](https://github.com/Barkha-Lodh/vanvidya-backend)
